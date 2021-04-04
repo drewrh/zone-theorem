@@ -47,13 +47,12 @@ class DrawZone(Scene):
         )
 
         # Create and draw the red line that defines the zone
-        zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
-        manim_zone_line = Line(*zone_line, color=RED)
+        manim_zone_line = Line(*self.zone_line, color=RED)
         self.bring_to_front(manim_zone_line)
         self.play(ShowCreation(manim_zone_line))
 
         # Draw the zone
-        zone = b.find_zone(zone_line)
+        zone = b.find_zone(self.zone_line)
         manim_zone = VGroup(
             *[
                 Polygon(*polygon.points, color=GREEN, fill_opacity=0.5)
@@ -68,9 +67,7 @@ class DrawZone(Scene):
 
 class DrawRandomZone(DrawZone):
     """
-    This class extends DrawZone by initializing self.lines. One can set the
-    parameter n to choose how many lines through the screen to draw/ These n
-    lines do not count the line that defines the zone.
+    Draws a random zone of :math:`n` lines.
     """
 
     def setup(self):
@@ -99,3 +96,28 @@ class DrawRandomZone(DrawZone):
             return (rand_side_point(side1), rand_side_point(side2))
 
         self.lines = [random_border_pair() for _ in range(n)]
+        self.zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
+
+
+class DrawGridZone(DrawZone):
+    """
+    Draws a grid of lines with a slanted zone line.
+    Note how if there are :math:`2n` white lines drawn, there are :math:`n+1`
+    rows and columns for a total of :math:`(n+1)^2` rectangular polygons.
+    In each row or column, the zone line crosses a constant number of polygons.
+    So, the zone line crosses :math:`O(n)` polygons.
+    Each polygon has a constant number of sides (in this case 4) so the zone
+    contains :math:`O(n)` edges.
+    """
+
+    def setup(self):
+        horizontal_lines = [
+            (point(-MAX_X, y + 0.5), point(MAX_X, y + 0.5))
+            for y in range(-MAX_Y, MAX_Y)
+        ]
+        vertical_lines = [
+            (point(x, -MAX_Y), point(x, MAX_Y)) for x in range(-MAX_X + 1, MAX_X)
+        ]
+
+        self.lines = horizontal_lines + vertical_lines
+        self.zone_line = (point(-MAX_X, -MAX_Y), point(MAX_X, MAX_Y))
