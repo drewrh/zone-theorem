@@ -171,7 +171,9 @@ class BoundedPolygonalSubdivision:
         """
 
         """
-        WLOG, let's say we're finding the correct HalfEdge for a.
+        WLOG, let's say we're finding the correct HalfEdge for a and a is left
+        of b.
+
         There are 2 cases:
         1) There exists a point above the line a--b
           * Find the rightmost point above the line a--b.
@@ -181,21 +183,26 @@ class BoundedPolygonalSubdivision:
 
         max_right = None  # rightmost point below the line a--b
         have_above = False  # are there any points above the line a--b?
+
         for neighbor_vertex in self.nbrs(a):  # iterates in ccw order
+
             # if there's a point above a--b
             if orient(a, b, neighbor_vertex) == 1:
+
                 # if all points before were below the line, we found our point
                 if not have_above:
                     h = self.get_handle(neighbor_vertex)
+
                     # Need to make sure half edge actually points to a
                     while not all(h.twin.point == a):
                         h = h.twin.link
+
                     return h
 
                 have_above = True
-            else:
-                if max_right is None or orient(a, max_right, neighbor_vertex) == 1:
-                    max_right = neighbor_vertex
+
+            elif max_right is None or orient(a, max_right, neighbor_vertex) == 1:
+                max_right = neighbor_vertex
 
         return self.get_handle(max_right)
 

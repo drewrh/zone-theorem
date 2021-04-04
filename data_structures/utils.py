@@ -50,6 +50,8 @@ def lex_compare(p1: ndarray, p2: ndarray) -> int:
 def segments_cross(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> bool:
     """
     Checks if segment a--b intersects segment c--d in a non-overlapping way.
+    If all 4 points are colinear, that is considered overlapping.
+    However, if the lines form a "T" shape, that is not overlapping.
 
     :param numpy.ndarray a: One endpoint of segment a--b
     :param numpy.ndarray b: Other endpoint of segment a--b
@@ -59,7 +61,7 @@ def segments_cross(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> bool:
     :rtype: bool
     """
 
-    return not orient(c, d, a) == orient(c, d, b) or orient(a, b, c) == orient(a, b, d)
+    return orient(a, b, c) != orient(a, b, d) and orient(c, d, a) != orient(c, d, b)
 
 
 def segment_intersection(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> ndarray:
@@ -78,7 +80,6 @@ def segment_intersection(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> ndar
     if not segments_cross(a, b, c, d):
         return None
 
-    # b should be first to work better w/ sliceedge
     if all(b == c) or all(b == d):
         return b
     if all(a == c) or all(a == d):
@@ -86,6 +87,9 @@ def segment_intersection(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> ndar
 
     # vab and vcd are the direction vectors of the lines
     vab, vcd = (b - a), (d - c)
+
+    if all(vab == vcd):
+        return None
 
     # Using a point (0,0,1) makes doing the derminant easier
     zero = point(0, 0)
@@ -101,8 +105,8 @@ def segment_intersection(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> ndar
 
     # If you put the line equations in slope-intercept form (y = mx + b),
     # solve for x then backsolve for y, you get this.
-    # It's probably basically Cramer's Rule rearranged to avoid division by 0.
-    x = (C2 / C3) * vab[0] - (C1 / C3) * vcd[0]
-    y = (C2 / C3) * vab[1] - (C1 / C3) * vcd[1]
+    # It's probably basically Cramer's Rule rearranged
+    x = (C2 * vab[0] - C1 * vcd[0]) / C3
+    y = (C2 * vab[1] - C1 * vcd[1]) / C3
 
     return point(x, y)
