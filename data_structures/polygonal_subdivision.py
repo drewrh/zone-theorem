@@ -299,10 +299,11 @@ class BoundedPolygonalSubdivision:
         """
 
         # Find the halfedges for doing edge subdivision
-        # TODO: might want to check if point already exists.
-        h1, h2 = self._find_boundary_half_edge(line[0]), self._find_boundary_half_edge(
-            line[1]
-        )
+        h1, h2 = self.get_handle(line[0]), self.get_handle(line[1])
+        if not h1:
+            h1 = self._find_boundary_half_edge(line[0])
+        if not h2:
+            h2 = self._find_boundary_half_edge(line[1])
 
         if not h1 or not h2:
             raise Exception()
