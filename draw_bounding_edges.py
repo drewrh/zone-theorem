@@ -2,7 +2,9 @@ from manim import Scene, ShowCreation, VGroup
 from manim.animation.transform import MoveToTarget
 from manim.mobject.geometry import Line, Dot, DashedLine
 from manim.utils.color import BLUE, RED, GREEN
-from manim.utils.rate_functions import linear
+
+from random import uniform, seed
+from time import time
 
 from screen_constants import MAX_X
 
@@ -13,14 +15,14 @@ from data_structures.utils import orient
 from math import sin, cos, pi
 
 
-# Make a regular polygon where
-def make_regular_polygon(sides, radius):
-    delta = 0 if sides % 2 == 0 else pi / sides
+# Make a random polygon where all points are co-circular.
+# This is basically a lazy way to make a random-ish convex polygon
+def random_circular_polygon(sides: int, radius: int) -> Polygon:
+    seed(time())
     return Polygon(
         [
-            radius
-            * point(cos(2 * pi / sides * t + delta), sin(2 * pi / sides * t + delta))
-            for t in range(sides)
+            radius * point(cos(t), sin(t))
+            for t in sorted([uniform(0, 2 * pi) for _ in range(sides)])
         ]
     )
 
@@ -28,7 +30,7 @@ def make_regular_polygon(sides, radius):
 class DrawBoundingEdges(Scene):
     """
     This scene is meant to illustrate what left and right bounding edges are.
-    It draws a convex (regular) polygon.
+    It draws a convex polygon.
     It then draws a red line through the screen like in the zone animation.
     Points are then added to each side of this line and brought to "infinity"
     (really just kinda far from the polygon) tangent lines are then drawn, to
@@ -36,8 +38,8 @@ class DrawBoundingEdges(Scene):
     """
 
     def construct(self):
-        # make a regular polygon
-        self.polygon = make_regular_polygon(sides=12, radius=2)
+        # make a "random" convex polygon
+        self.polygon = random_circular_polygon(12, 2)
 
         # convert it to a manim object and draw it
         manim_polygon = VGroup(
