@@ -1,28 +1,27 @@
 """
-Contains an animation to illustrate the concept of left and right bounding edges.
+Contains an animation to illustrate the concept of left and right bounding
+edges.
 
 :Authors:
     - William Boyles (wmboyles)
 """
 
-from manim import Scene, VGroup
-from manim.animation.creation import Write, ShowCreation
-from manim.animation.transform import ReplacementTransform
-from manim.mobject.geometry import Line, DashedLine
-from manim.mobject.svg.text_mobject import Text
-from manim.constants import DOWN, LEFT, RIGHT, UP
-from manim.utils.color import RED, GREEN, BLUE
-
-from random import uniform, seed
+from math import cos, pi, sin
+from random import seed, uniform
 from time import time
 
-from screen_constants import MAX_X
+from manim import Scene, VGroup
+from manim.animation.creation import ShowCreation, Write
+from manim.animation.transform import ReplacementTransform
+from manim.constants import DOWN, LEFT, RIGHT, UP
+from manim.mobject.geometry import DashedLine, Line
+from manim.mobject.svg.text_mobject import Text
+from manim.utils.color import BLUE, GREEN, RED
 
-from data_structures.polygon import Polygon
-from data_structures.point import point
-from data_structures.utils import orient
-
-from math import sin, cos, pi
+from ..data_structures.point import point
+from ..data_structures.polygon import Polygon
+from ..data_structures.utils import orient
+from .screen_constants import MAX_X
 
 
 def random_circular_polygon(sides: int, radius: float) -> Polygon:
@@ -62,6 +61,8 @@ class DrawBoundingEdges(Scene):
     """
 
     def construct(self):
+        """:meta private:"""
+
         # make a "random" convex polygon
         polygon_radius = 2.5
         self.polygon = random_circular_polygon(sides=12, radius=polygon_radius)

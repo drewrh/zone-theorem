@@ -1,15 +1,24 @@
-from manim import *
 from random import uniform
 
-from data_structures.point import point
-from data_structures.polygon import Polygon
+from manim import *
 
-# bounds on size of screen
-from screen_constants import MAX_X, MAX_Y
+from ..data_structures.point import point
+from ..data_structures.polygon import Polygon
+from .screen_constants import MAX_X, MAX_Y
 
 
 class DrawPolygon(Scene):
+    """
+    Draws a given :class:`data_structures.polygon.Polygon` one edge at a time.
+    Must be extended and initialized with `self.polygon`.
+
+    :Authors:
+        - William Boyles (wmboyles)
+    """
+
     def construct(self):
+        """:meta private:"""
+
         # Create all the points
         manim_points = VGroup(*[Dot(point, radius=0.05) for point in self.polygon])
         self.play(ShowCreation(manim_points))
@@ -39,8 +48,19 @@ class DrawPolygon(Scene):
         self.wait(5)
 
 
-class DrawSimplePolygon(DrawPolygon):
+class MakeSimplePolygon(DrawPolygon):
+    """
+    Creates 32 (can be changed) random points in the plane and creates a simple
+    polygon of all points using the "sort by angle" approach. Animates the
+    sorting by angle to incrementally build the polygon.
+
+    :Authors:
+        - William Boyles (wmboyles)
+    """
+
     def setup(self):
+        """:meta private:"""
+
         # number of points
         n = 32
 

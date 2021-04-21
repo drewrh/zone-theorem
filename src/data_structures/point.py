@@ -22,4 +22,5 @@ def point(*coords, z=1) -> ndarray:
     :return: A numpy array of point like (coords, z).
     :rtype: numpy.ndarray
     """
+
     return append(coords, z)

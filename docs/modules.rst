@@ -1,7 +1,4 @@
-data_structures
-===============
-
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
-   data_structures
+   src
