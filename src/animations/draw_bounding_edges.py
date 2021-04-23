@@ -1,6 +1,6 @@
 """
-Contains an animation to illustrate the concept of left and right bounding
-edges.
+Contains an animations to illustrate the concept of left and right bounding
+edges of a polygon with respect to a zone line.
 
 :Authors:
     - William Boyles (wmboyles)
@@ -10,41 +10,14 @@ from math import cos, pi, sin
 from random import seed, uniform
 from time import time
 
-from manim import Scene, VGroup
-from manim.animation.creation import ShowCreation, Write
-from manim.animation.transform import ReplacementTransform
-from manim.constants import DOWN, LEFT, RIGHT, UP
-from manim.mobject.geometry import DashedLine, Line
-from manim.mobject.svg.text_mobject import Text
-from manim.utils.color import BLUE, GREEN, RED
+from manim import *
 
 from ..data_structures.point import point
-from ..data_structures.polygon import Polygon
+
+# Have to rename to avoid conflict with manim's Polygon class
+from ..data_structures.polygon import Polygon as BoundingPolygon
 from ..data_structures.utils import orient
 from .screen_constants import MAX_X
-
-
-def random_circular_polygon(sides: int, radius: float) -> Polygon:
-    """
-    Creates a polygon with a given number of sides where all vertices are on a
-    circle of a given radius.
-    This ensures the polygon is convex.
-
-    :param int sides: number of sides in polygon
-    :param float radius: radius of circle on which all polygon vertices will
-        sit
-    :return: A convex polygon with the given number of sides and all points on
-        a circle of the given radius.
-    :rtype: :class:`data_structures.polygon.Polygon`
-    """
-
-    seed(time())
-    return Polygon(
-        [
-            radius * point(cos(t), sin(t))
-            for t in sorted([uniform(0, 2 * pi) for _ in range(sides)])
-        ]
-    )
 
 
 class DrawBoundingEdges(Scene):
@@ -54,18 +27,40 @@ class DrawBoundingEdges(Scene):
     It then draws a red line through the screen like in the zone animation.
     Points are then added to each side of this line and brought to "infinity"
     (really just kinda far from the polygon) tangent lines are then drawn, to
-    the shape
-
-    :Authors:
-        - William Boyles (wmboyles)
+    the shape.
     """
+
+    @classmethod
+    def random_circular_polygon(cls, sides: int, radius: float) -> BoundingPolygon:
+        """
+        Creates a polygon with a given number of sides where all vertices are on
+        a circle of a given radius. This ensures the polygon is convex like in
+        an arrangement of lines.
+
+        :param int sides: number of sides in polygon
+        :param float radius: radius of circle on which all polygon vertices will
+            sit
+        :return: A convex polygon with the given number of sides and all points on
+            a circle of the given radius.
+        :rtype: :class:`src.data_structures.polygon.Polygon`
+        """
+
+        seed(time())
+        return BoundingPolygon(
+            [
+                radius * point(cos(t), sin(t))
+                for t in sorted([uniform(0, 2 * pi) for _ in range(sides)])
+            ]
+        )
 
     def construct(self):
         """:meta private:"""
 
         # make a "random" convex polygon
         polygon_radius = 2.5
-        self.polygon = random_circular_polygon(sides=12, radius=polygon_radius)
+        self.polygon = DrawBoundingEdges.random_circular_polygon(
+            sides=12, radius=polygon_radius
+        )
 
         # Draw the random convex polyogn
         manim_polygon = VGroup(
