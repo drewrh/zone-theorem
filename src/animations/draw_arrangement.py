@@ -54,42 +54,51 @@ class DrawRandomArrangement(DrawArrangement):
     """
 
     @classmethod
-    def random_lines(cls, n: int, zone_line: tuple = None) -> list:
+    def random_lines(cls, n: int) -> list:
         """
         Creates n random lines inside the screen.
-        Lines are sorted by the x coordinate of their intersection with the zone line.
+        Lines are sorted by the x coordinate of their intersection with a
+        horizontal zone line with :math:`y` coordinate of 0.
 
         :param int n: Number of lines to create
-        :param tuple[numpy.ndarray] zone_line: Line relative to which to sort lines. If `zone_line`
-            is `None`, then it is assumed `zone_line` is the honrzontal line with a
-            :math:`y` coordinate of 0.
         :return: A list of lines
         :rtype: list[numpy.ndarray]
         """
 
-        if zone_line is None:
-            zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
+        zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
 
         seed(time())
 
         # generate n random lines by generating 2n random points on the border
+        # every line is chosen to cross the horizontal zone line with y=0
         def random_border_pair():
-            sides = list(range(4))
-            side1 = choice(sides)
-            side2 = choice(sides[:side1] + sides[side1 + 1 :])
+            # For the top point, pick the left (0), top (1), or right (2) side
+            top_side = choice(range(0, 3))
 
-            def rand_side_point(side):
-                x, y = uniform(-MAX_X, MAX_X), uniform(-MAX_Y, MAX_Y)
-                if side == 0:
-                    return point(-MAX_X, y)
-                elif side == 1:
-                    return point(x, MAX_Y)
-                elif side == 2:
-                    return point(MAX_X, y)
-                elif side == 3:
-                    return point(x, -MAX_Y)
+            # left side
+            if top_side == 0:
+                pt1 = point(-MAX_X, uniform(0, MAX_Y))
+                bottom_side = choice(range(1, 3))
+            # top side
+            elif top_side == 1:
+                pt1 = point(uniform(-MAX_X, MAX_X), MAX_Y)
+                bottom_side = choice(range(0, 3, 2))
+            # right side
+            else:
+                pt1 = point(MAX_X, uniform(0, MAX_Y))
+                bottom_side = choice(range(0, 2))
 
-            return (rand_side_point(side1), rand_side_point(side2))
+            # left side
+            if bottom_side == 0:
+                pt2 = point(-MAX_X, uniform(-MAX_Y, 0))
+            # bottom side
+            elif bottom_side == 1:
+                pt2 = point(uniform(-MAX_X, MAX_X), -MAX_Y)
+            # left side
+            else:
+                pt2 = point(MAX_X, uniform(-MAX_Y, 0))
+
+            return (pt1, pt2)
 
         lines = [random_border_pair() for _ in range(n)]
 
