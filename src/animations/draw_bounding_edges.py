@@ -25,9 +25,9 @@ class DrawBoundingEdges(Scene):
     This scene is meant to illustrate what left and right bounding edges are.
     It draws a convex polygon.
     It then draws a red line through the screen like in the zone animation.
-    Points are then added to each side of this line and brought to "infinity"
-    (really just kinda far from the polygon) tangent lines are then drawn, to
-    the shape.
+    It then draws lines above and below the polygon, parallel to the zone line,
+    which find the two points on the polygon that separate the elft and right
+    sides.
     """
 
     @classmethod

@@ -1,6 +1,7 @@
 """
 Contains HalfEdge class, which is generally used in polygonal subdivision data
-structures like :class:`data_structures.polygonal_subdivision.BoundedPolygonalSubdivision`.
+structures like
+:class:`src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision`.
 
 :Authors:
     - William Boyles (wmboyles)
@@ -43,23 +44,17 @@ class HalfEdge:
     """Other HalfEdge defining the same edge as this HalfEdge"""
 
     link: "HalfEdge" = None
-    """
-    Next HalfEdge in same :class:`data_structures.polygon.Polygon` as this
-    HalfEdge
-    """
+    """Next HalfEdge in same Polygon as thisHalfEdge"""
 
     prev: "HalfEdge" = None
-    """
-    Previous Halfedge in same :class:`data_structures.polygon.Polygon` as this
-    HalfEdge
-    """
+    """Previous Halfedge in same Polygon as this HalfEdge"""
 
     def get_polygon(self) -> Polygon:
         """
-        Gets the :class:`data_structures.polygon.Polygon` of this HalfEdge.
+        Gets the Polygon of this HalfEdge.
 
         :return: The polygon of which this HalfEdge defines one edge.
-        :rtype: Polygon
+        :rtype: :class:`src.data_structures.polygon.Polygon`
         """
 
         pts = [self.point]

@@ -16,7 +16,7 @@ def point(*coords, z=1) -> ndarray:
 
     :param float coords: Coordinates of point
     :param float z: Final "z" coordinate of point. Defaults to 1 to make things
-        like :func:`data_structures.utils.orient` easier, but can be 0 to
+        like :func:`src.data_structures.utils.orient` easier, but can be 0 to
         simulate points infinitely far away in the direction of coords as a
         vector.
     :return: A numpy array of point like (coords, z).

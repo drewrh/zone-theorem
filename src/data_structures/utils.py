@@ -33,8 +33,8 @@ def lex_compare(p1: ndarray, p2: ndarray) -> int:
     """
     Compare two points lexiographically. (0,0) < (0,1) < (1,0) < (1,1).
 
-    :param numpy.ndarray p1: First point to compare
-    :param numpy.ndarray p2: Second point to compare
+    :param ndarray p1: First point to compare
+    :param ndarray p2: Second point to compare
     :return: -1 if p1 < p2, 0 if p1 == p2, and 1 if p1 > p2 lexiographically
     :rtype: int
     """
@@ -53,10 +53,10 @@ def segments_cross(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> bool:
     If all 4 points are colinear, that is considered overlapping.
     However, if the lines form a "T" shape, that is not overlapping.
 
-    :param numpy.ndarray a: One endpoint of segment a--b
-    :param numpy.ndarray b: Other endpoint of segment a--b
-    :param numpy.ndarray c: One endpoint of segment c--d
-    :param numpy.ndarray d: Other endpoint of segment c--d
+    :param ndarray a: One endpoint of segment a--b
+    :param ndarray b: Other endpoint of segment a--b
+    :param ndarray c: One endpoint of segment c--d
+    :param ndarray d: Other endpoint of segment c--d
     :return: True iff the segments are not colinear and intersect, else False
     :rtype: bool
     """
@@ -69,12 +69,12 @@ def segment_intersection(a: ndarray, b: ndarray, c: ndarray, d: ndarray) -> ndar
     Given four points a,b,c,d defining two line segments a--b and c--d,
     determine at what point they cross.
 
-    :param numpy.ndarray a: One endpoint of segment a--b
-    :param numpy.ndarray b: Other endpoint of segment a--b
-    :param numpy.ndarray c: One endpoint of segment c--d
-    :param numpy.ndarray d: Other endpoint of segment c--d
+    :param ndarray a: One endpoint of segment a--b
+    :param ndarray b: Other endpoint of segment a--b
+    :param ndarray c: One endpoint of segment c--d
+    :param ndarray d: Other endpoint of segment c--d
     :return: The point at which segment a--b intersects c--d
-    :rtype: numpy.ndarray or None
+    :rtype: ndarray or None
     """
 
     if not segments_cross(a, b, c, d):

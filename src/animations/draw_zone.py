@@ -49,8 +49,8 @@ class DrawZone(DrawArrangement):
 
 class DrawRandomZone(DrawZone, DrawRandomArrangement):
     """
-    Extends :class:`animations.draw_zones.DrawZone` and
-    :class:`animations.draw_arrangement.DrawRandomArrangement`. Initializes
+    Extends :class:`src.animations.draw_zones.DrawZone` and
+    :class:`src.animations.draw_arrangement.DrawRandomArrangement`. Initializes
     `self.zone_line` with a horizontal line with :math:`y` coordinate of 0.
     """
 

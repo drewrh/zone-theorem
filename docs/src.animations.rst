@@ -4,6 +4,14 @@ src.animations package
 Submodules
 ----------
 
+src.animations.draw\_arrangement module
+---------------------------------------
+
+.. automodule:: src.animations.draw_arrangement
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 src.animations.draw\_bounding\_edges module
 -------------------------------------------
 
@@ -12,18 +20,18 @@ src.animations.draw\_bounding\_edges module
    :undoc-members:
    :show-inheritance:
 
-src.animations.draw\_polygon module
------------------------------------
+src.animations.draw\_statements module
+--------------------------------------
 
-.. automodule:: src.animations.draw_polygon
+.. automodule:: src.animations.draw_statements
    :members:
    :undoc-members:
    :show-inheritance:
 
-src.animations.draw\_zones module
----------------------------------
+src.animations.draw\_zone module
+--------------------------------
 
-.. automodule:: src.animations.draw_zones
+.. automodule:: src.animations.draw_zone
    :members:
    :undoc-members:
    :show-inheritance:

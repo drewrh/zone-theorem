@@ -20,7 +20,7 @@ from .screen_constants import MAX_X, MAX_Y
 class DrawArrangement(Scene):
     """
     General code to draw an arrangment of lines.
-    Stores the arrangment as a :class:`data_structures.polygonal_subdivision.BoundedPolygonalSubdivision` as `self.bps`.
+    Stores the arrangment as a :class:`src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision` as `self.bps`.
 
     Requires a class to extend it and initialize it with the following:
         * `self.lines` -- A list of lines defining an arrangment of lines
@@ -48,9 +48,9 @@ class DrawArrangement(Scene):
 
 class DrawRandomArrangement(DrawArrangement):
     """
-    Extends :class:`animations.draw_arrangement.DrawArrangement`.
+    Extends :class:`src.animations.draw_arrangement.DrawArrangement`.
     Iniitalizes `self.lines` with 10 (can be changed) random lines from
-    :func:`animations.draw_arrangement.DrawRandomArrangement.random_lines`.
+    :func:`src.animations.draw_arrangement.DrawRandomArrangement.random_lines`.
     """
 
     @classmethod
@@ -109,7 +109,7 @@ class DrawRandomArrangement(DrawArrangement):
 class DrawArrangmementDefinition(Scene):
     """
     Writes the defintion of an arrangement of lines, draws an example of an
-    arrangment of lines using :class:`src.animations.DrawRandomArrangement`,
+    arrangment of lines using :class:`src.animations.draw_arrangement.DrawRandomArrangement`,
     and lists some basic properties of arrangements.
     """
 
