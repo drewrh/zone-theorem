@@ -8,7 +8,11 @@ zone theorem.
 
 from manim import *
 
-from src.animations.draw_arrangement import DrawArrangmementDefinition
+from src.animations.draw_arrangement import (
+    DrawArrangmementDefinition,
+    DrawProofBaseCase,
+    DrawProofInductiveCase,
+)
 from src.animations.draw_statements import (
     DrawZoneTheoremStartProof,
     DrawZoneTheoremStatement,
@@ -58,3 +62,16 @@ class Main(Scene):
         DrawBoundingEdgesDefinition.construct(self)
 
         self.wait(3)
+        self.clear()
+
+        DrawProofBaseCase.setup(self)
+        DrawProofBaseCase.construct(self)
+
+        self.wait(3)
+        self.clear()
+
+        DrawProofInductiveCase.setup(self)
+        DrawProofInductiveCase.construct(self)
+
+        self.wait(3)
+        self.clear()

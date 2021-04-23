@@ -157,3 +157,50 @@ class DrawArrangmementDefinition(Scene):
         self.play(Write(properties), run_time=len(properties))
 
         self.wait(2)
+
+
+class DrawProofBaseCase(Scene):
+    def construct(self):
+        heading = Text("Proof: Base Case")
+        heading.scale(1.5)
+        heading.to_edge(UP)
+        self.add(heading)
+
+        statement = Tex("Trivially 1 left edge for $n = 1$")
+        self.play(Write(statement), run_time=1.5)
+
+        self.wait(2)
+        self.clear()
+
+        # Initialize self.lines for the draw arrangement
+        self.lines = [(point(-MAX_X + 2, -MAX_Y), point(MAX_X - 2, MAX_Y))]
+        DrawArrangement.setup(self)
+        DrawArrangement.construct(self)
+
+        # Draw red zone line
+        zone_line = Line(point(-MAX_X, 0), point(MAX_X, 0), color=RED)
+        self.play(ShowCreation(zone_line))
+
+        # Highlight drawn line as left edge
+        highlight_line = Line(*self.lines[0], color=GREEN, stroke_width=10)
+        self.play(ShowCreation(highlight_line))
+
+
+class DrawProofInductiveCase(Scene):
+    def construct(self):
+        heading = Text("Proof: Inductive Step")
+        heading.scale(1.5)
+        heading.to_edge(UP)
+        self.add(heading)
+
+        assumption = Tex(
+            r"Assume true for all lines in $L$ except $\ell_r$, the rightmost line in $L$.\\",
+            tex_environment="flushleft",
+        )
+        equation = Tex(
+            r"\bigg\lvert \text{zone}(A(L \setminus \{\ell_r\}), \ell) \bigg\rvert \leq 3(n-1)",
+            tex_environment="equation*",
+        )
+        equation.next_to(assumption, DOWN)
+        self.play(Write(assumption), run_time=2)
+        self.play(Write(equation), run_time=2)

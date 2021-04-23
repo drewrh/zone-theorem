@@ -154,7 +154,7 @@ class DrawBoundingEdgesDefinition(Scene):
         definition.to_edge(LEFT)
         definition.shift(UP)
 
-        self.play(Write(definition), run_time=6)
+        self.play(Write(definition), run_time=7)
         self.wait(3)
 
         self.clear()
