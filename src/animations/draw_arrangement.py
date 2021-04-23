@@ -160,7 +160,14 @@ class DrawArrangmementDefinition(Scene):
 
 
 class DrawProofBaseCase(Scene):
+    """
+    Animates the base case of the zone theorem by showing that adding the first
+    line only adds 1 left bounding edge.
+    """
+
     def construct(self):
+        """:meta private:"""
+
         heading = Text("Proof: Base Case")
         heading.scale(1.5)
         heading.to_edge(UP)
@@ -187,7 +194,17 @@ class DrawProofBaseCase(Scene):
 
 
 class DrawProofInductiveCase(Scene):
+    """
+    Animates the inductive step of the proof of the zone theorem by showing
+    that adding the rightmost line only adds at most 3 edges: 2 splitting the
+    left edges above and below the zone line, and one edge from the added line
+    itself.
+    """
+
+    # TODO: Animate adding rightmost line
     def construct(self):
+        """:meta private:"""
+
         heading = Text("Proof: Inductive Step")
         heading.scale(1.5)
         heading.to_edge(UP)

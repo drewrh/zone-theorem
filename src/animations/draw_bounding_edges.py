@@ -136,6 +136,12 @@ class DrawBoundingEdges(Scene):
 
 
 class DrawBoundingEdgesDefinition(Scene):
+    """
+    This animmation gives a definition of what bounding edges are and draws the
+    left and right bounding edges on a random convex polygon using
+    :class:`src.animations.draw_bounding_edges.DrawBoundingEdges`.
+    """
+
     def construct(self):
         """:meta private:"""
 
