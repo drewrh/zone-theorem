@@ -134,4 +134,43 @@ class DrawBoundingEdges(Scene):
 
         self.play(Write(left_label), Write(right_label))
 
+
+class DrawBoundingEdgesDefinition(Scene):
+    def construct(self):
+        """:meta private:"""
+
+        heading = Text("Counting Edges")
+        heading.scale(1.5)
+        heading.to_edge(UP)
+        self.add(heading)
+
+        definition = Tex(
+            r"\textbf{Definition: } The \underline{left bounding edges} of a convex polygon $P$\\",
+            r"with respect to a horizontal line $\ell$ are all edges of $P$ that\\",
+            r"are visible from a point infinitely far to the left on $\ell$.\\",
+            r"All edges of $P$ are either left or right bounding.",
+            tex_environment="flushleft",
+        )
+        definition.to_edge(LEFT)
+        definition.shift(UP)
+
+        self.play(Write(definition), run_time=6)
+        self.wait(3)
+
+        self.clear()
+
+        DrawBoundingEdges.setup(self)
+        DrawBoundingEdges.construct(self)
+
         self.wait(5)
+        self.clear()
+
+        self.add(heading, definition)
+        idea = Tex(
+            r"\textbf{Idea:} Count left and right bounding edges separately.",
+            tex_environment="flushleft",
+        )
+        idea.to_edge(LEFT)
+        idea.shift(2 * DOWN)
+
+        self.play(Write(idea), run_time=2)

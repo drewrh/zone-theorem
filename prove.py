@@ -14,6 +14,7 @@ from src.animations.draw_statements import (
     DrawZoneTheoremStatement,
 )
 from src.animations.draw_zone import DrawZoneDefintion
+from src.animations.draw_bounding_edges import DrawBoundingEdgesDefinition
 
 
 class Main(Scene):
@@ -52,3 +53,8 @@ class Main(Scene):
 
         self.wait(3)
         self.clear()
+
+        DrawBoundingEdgesDefinition.setup(self)
+        DrawBoundingEdgesDefinition.construct(self)
+
+        self.wait(3)
