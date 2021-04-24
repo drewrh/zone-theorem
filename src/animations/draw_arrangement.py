@@ -17,6 +17,62 @@ from ..data_structures.utils import segment_intersection
 from .screen_constants import MAX_X, MAX_Y
 
 
+def random_lines(n: int) -> list:
+    """
+    Creates n random lines inside the screen.
+    Lines are sorted by the x coordinate of their intersection with a
+    horizontal zone line with :math:`y` coordinate of 0.
+
+    :param int n: Number of lines to create
+    :return: A list of lines
+    :rtype: list[numpy.ndarray]
+    """
+
+    zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
+
+    seed(time())
+
+    # generate n random lines by generating 2n random points on the border
+    # every line is chosen to cross the horizontal zone line with y=0
+    def random_border_pair():
+        # For the top point, pick the left (0), top (1), or right (2) side
+        top_side = choice(range(0, 3))
+
+        # left side
+        if top_side == 0:
+            pt1 = point(-MAX_X, uniform(0, MAX_Y))
+            bottom_side = choice(range(1, 3))
+        # top side
+        elif top_side == 1:
+            pt1 = point(uniform(-MAX_X, MAX_X), MAX_Y)
+            bottom_side = choice(range(0, 3, 2))
+        # right side
+        else:
+            pt1 = point(MAX_X, uniform(0, MAX_Y))
+            bottom_side = choice(range(0, 2))
+
+        # left side
+        if bottom_side == 0:
+            pt2 = point(-MAX_X, uniform(-MAX_Y, 0))
+        # bottom side
+        elif bottom_side == 1:
+            pt2 = point(uniform(-MAX_X, MAX_X), -MAX_Y)
+        # left side
+        else:
+            pt2 = point(MAX_X, uniform(-MAX_Y, 0))
+
+        return (pt1, pt2)
+
+    lines = [random_border_pair() for _ in range(n)]
+
+    # Get a key for a line based on x coordinate intersection with zone line
+    def seg_cmp(line):
+        intersection = segment_intersection(*zone_line, *line)
+        return -MAX_X - 1 if intersection is None else intersection[0]
+
+    return sorted(lines, key=seg_cmp)
+
+
 class DrawArrangement(Scene):
     """
     General code to draw an arrangment of lines.
@@ -50,69 +106,13 @@ class DrawRandomArrangement(DrawArrangement):
     """
     Extends :class:`src.animations.draw_arrangement.DrawArrangement`.
     Iniitalizes `self.lines` with 10 (can be changed) random lines from
-    :func:`src.animations.draw_arrangement.DrawRandomArrangement.random_lines`.
+    :func:`src.animations.draw_arrangement.random_lines`.
     """
-
-    @classmethod
-    def random_lines(cls, n: int) -> list:
-        """
-        Creates n random lines inside the screen.
-        Lines are sorted by the x coordinate of their intersection with a
-        horizontal zone line with :math:`y` coordinate of 0.
-
-        :param int n: Number of lines to create
-        :return: A list of lines
-        :rtype: list[numpy.ndarray]
-        """
-
-        zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
-
-        seed(time())
-
-        # generate n random lines by generating 2n random points on the border
-        # every line is chosen to cross the horizontal zone line with y=0
-        def random_border_pair():
-            # For the top point, pick the left (0), top (1), or right (2) side
-            top_side = choice(range(0, 3))
-
-            # left side
-            if top_side == 0:
-                pt1 = point(-MAX_X, uniform(0, MAX_Y))
-                bottom_side = choice(range(1, 3))
-            # top side
-            elif top_side == 1:
-                pt1 = point(uniform(-MAX_X, MAX_X), MAX_Y)
-                bottom_side = choice(range(0, 3, 2))
-            # right side
-            else:
-                pt1 = point(MAX_X, uniform(0, MAX_Y))
-                bottom_side = choice(range(0, 2))
-
-            # left side
-            if bottom_side == 0:
-                pt2 = point(-MAX_X, uniform(-MAX_Y, 0))
-            # bottom side
-            elif bottom_side == 1:
-                pt2 = point(uniform(-MAX_X, MAX_X), -MAX_Y)
-            # left side
-            else:
-                pt2 = point(MAX_X, uniform(-MAX_Y, 0))
-
-            return (pt1, pt2)
-
-        lines = [random_border_pair() for _ in range(n)]
-
-        # Get a key for a line based on x coordinate intersection with zone line
-        def seg_cmp(line):
-            intersection = segment_intersection(*zone_line, *line)
-            return -MAX_X - 1 if intersection is None else intersection[0]
-
-        return sorted(lines, key=seg_cmp)
 
     def setup(self):
         """:meta private:"""
 
-        self.lines = DrawRandomArrangement.random_lines(10)
+        self.lines = random_lines(10)
 
 
 class DrawArrangmementDefinition(Scene):
@@ -210,10 +210,10 @@ class DrawProofInductiveCase(Scene):
     itself.
     """
 
-    # TODO: Animate adding rightmost line
     def construct(self):
         """:meta private:"""
 
+        # Show our assumption going into the inductive step
         heading = Text("Proof: Inductive Step")
         heading.scale(1.5)
         heading.to_edge(UP)
@@ -223,10 +223,99 @@ class DrawProofInductiveCase(Scene):
             r"Assume true for all lines in $L$ except $\ell_r$, the rightmost line in $L$.\\",
             tex_environment="flushleft",
         )
+        assumption.shift(2 * UP)
+        equation_list = [
+            r"\bigg\lvert \text{zone}\left(A(L \setminus \{\ell_r\}), \ell\right) \bigg\rvert",
+            r"\leq",
+            r"3(n-1)",
+        ]
         equation = Tex(
-            r"\bigg\lvert \text{zone}(A(L \setminus \{\ell_r\}), \ell) \bigg\rvert \leq 3(n-1)",
+            *equation_list,
             tex_environment="equation*",
         )
         equation.next_to(assumption, DOWN)
         self.play(Write(assumption), run_time=2)
         self.play(Write(equation), run_time=2)
+
+        self.wait(2)
+        self.clear()
+
+        # # Draw all the lines except the last one
+        # all_lines = random_lines(5)
+        # self.lines = all_lines[:-1]
+
+        # # sets self.bps for us
+        # DrawArrangement.setup(self)
+        # DrawArrangement.construct(self)
+
+        # # Draw the red zone line
+        # zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
+        # self.play(ShowCreation(Line(*zone_line, color=RED)))
+
+        # # change the last line to be vertical
+        # # this isn't necessary for the proof, but it makes illustration easier
+        # last_line_x = segment_intersection(*zone_line, *all_lines[-1])[0]
+        # last_line = (point(last_line_x, -MAX_Y), point(last_line_x, MAX_Y))
+
+        # # Keep track of edges of rightmost polygon in the zone
+        # last_polygon = self.bps.find_zone(zone_line)[-1]
+        # before_add_edges = {
+        #     (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
+        #     for i in range(len(last_polygon))
+        # }
+
+        # # Add the rightmost line
+        # self.bps.add_line(last_line)
+        # self.play(ShowCreation(Line(*last_line)))
+
+        # # Keep track of edges of rightmost polygon in the zone
+        # last_polygon = self.bps.find_zone(zone_line)[-1]
+        # after_add_edges = {
+        #     (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
+        #     for i in range(len(last_polygon))
+        # }
+
+        # # The difference in edges are the added left edges
+        # for line in after_add_edges - before_add_edges:
+        #     # This edge is the 1 added by the line itself
+        #     if round(line[0][0] - line[1][0], 7) == 0:
+        #         self.play(ShowCreation(Line(*line, color=GREEN, stroke_width=10)))
+        #     # These edges are the 2 added by subdividing above and below lines
+        #     else:
+        #         self.play(ShowCreation(Line(*line, color=YELLOW, stroke_width=10)))
+
+        # self.wait(3)
+        # self.clear()
+
+        # Now conclude we added 3 lines
+        equation.scale(0.75)
+        equation.next_to(heading, DOWN)
+        self.add(heading, equation)
+
+        list_heading = Tex(
+            r"\underline{Added Edges}",
+            tex_environment="flushleft",
+        )
+        list_heading.scale(0.75)
+        list_heading.to_edge(LEFT)
+        list_heading.shift(UP)
+        added_list = BulletedList(
+            "$\ell_r$  itself (+1)",
+            "Subdivide above, below (+2)",
+            tex_environment="flushleft",
+        )
+        added_list.scale(0.75)
+        added_list.next_to(list_heading, DOWN, aligned_edge=LEFT)
+
+        self.play(Write(list_heading))
+        self.play(Write(added_list), run_time=2)
+
+        self.wait(2)
+
+        # final_equation = Tex(
+        #     r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+        #     r"\leq",
+        #     equation_list[0],
+        #     r"+1+2",
+        #     tex_environment="equation*",
+        # )
