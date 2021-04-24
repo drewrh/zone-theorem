@@ -1,51 +1,23 @@
 """
-Contains an animation to illustrate the concept of left and right bounding edges.
+Contains an animations to illustrate the concept of left and right bounding
+edges of a polygon with respect to a zone line.
 
 :Authors:
     - William Boyles (wmboyles)
 """
 
-from manim import Scene, VGroup
-from manim.animation.creation import Write, ShowCreation
-from manim.animation.transform import ReplacementTransform
-from manim.mobject.geometry import Line, DashedLine
-from manim.mobject.svg.text_mobject import Text
-from manim.constants import DOWN, LEFT, RIGHT, UP
-from manim.utils.color import RED, GREEN, BLUE
-
-from random import uniform, seed
+from math import cos, pi, sin
+from random import seed, uniform
 from time import time
 
-from screen_constants import MAX_X
+from manim import *
 
-from data_structures.polygon import Polygon
-from data_structures.point import point
-from data_structures.utils import orient
+from ..data_structures.point import point
 
-from math import sin, cos, pi
-
-
-def random_circular_polygon(sides: int, radius: float) -> Polygon:
-    """
-    Creates a polygon with a given number of sides where all vertices are on a
-    circle of a given radius.
-    This ensures the polygon is convex.
-
-    :param int sides: number of sides in polygon
-    :param float radius: radius of circle on which all polygon vertices will
-        sit
-    :return: A convex polygon with the given number of sides and all points on
-        a circle of the given radius.
-    :rtype: :class:`data_structures.polygon.Polygon`
-    """
-
-    seed(time())
-    return Polygon(
-        [
-            radius * point(cos(t), sin(t))
-            for t in sorted([uniform(0, 2 * pi) for _ in range(sides)])
-        ]
-    )
+# Have to rename to avoid conflict with manim's Polygon class
+from ..data_structures.polygon import Polygon as BoundingPolygon
+from ..data_structures.utils import orient
+from .screen_constants import MAX_X
 
 
 class DrawBoundingEdges(Scene):
@@ -53,18 +25,42 @@ class DrawBoundingEdges(Scene):
     This scene is meant to illustrate what left and right bounding edges are.
     It draws a convex polygon.
     It then draws a red line through the screen like in the zone animation.
-    Points are then added to each side of this line and brought to "infinity"
-    (really just kinda far from the polygon) tangent lines are then drawn, to
-    the shape
-
-    :Authors:
-        - William Boyles (wmboyles)
+    It then draws lines above and below the polygon, parallel to the zone line,
+    which find the two points on the polygon that separate the elft and right
+    sides.
     """
 
+    @classmethod
+    def random_circular_polygon(cls, sides: int, radius: float) -> BoundingPolygon:
+        """
+        Creates a polygon with a given number of sides where all vertices are on
+        a circle of a given radius. This ensures the polygon is convex like in
+        an arrangement of lines.
+
+        :param int sides: number of sides in polygon
+        :param float radius: radius of circle on which all polygon vertices will
+            sit
+        :return: A convex polygon with the given number of sides and all points on
+            a circle of the given radius.
+        :rtype: :class:`src.data_structures.polygon.Polygon`
+        """
+
+        seed(time())
+        return BoundingPolygon(
+            [
+                radius * point(cos(t), sin(t))
+                for t in sorted([uniform(0, 2 * pi) for _ in range(sides)])
+            ]
+        )
+
     def construct(self):
+        """:meta private:"""
+
         # make a "random" convex polygon
         polygon_radius = 2.5
-        self.polygon = random_circular_polygon(sides=12, radius=polygon_radius)
+        self.polygon = DrawBoundingEdges.random_circular_polygon(
+            sides=12, radius=polygon_radius
+        )
 
         # Draw the random convex polyogn
         manim_polygon = VGroup(
@@ -138,4 +134,49 @@ class DrawBoundingEdges(Scene):
 
         self.play(Write(left_label), Write(right_label))
 
+
+class DrawBoundingEdgesDefinition(Scene):
+    """
+    This animmation gives a definition of what bounding edges are and draws the
+    left and right bounding edges on a random convex polygon using
+    :class:`src.animations.draw_bounding_edges.DrawBoundingEdges`.
+    """
+
+    def construct(self):
+        """:meta private:"""
+
+        heading = Text("Counting Edges")
+        heading.scale(1.5)
+        heading.to_edge(UP)
+        self.add(heading)
+
+        definition = Tex(
+            r"\textbf{Definition: } The \underline{left bounding edges} of a convex polygon $P$\\",
+            r"with respect to a horizontal line $\ell$ are all edges of $P$ that\\",
+            r"are visible from a point infinitely far to the left on $\ell$.\\",
+            r"All edges of $P$ are either left or right bounding.",
+            tex_environment="flushleft",
+        )
+        definition.to_edge(LEFT)
+        definition.shift(UP)
+
+        self.play(Write(definition), run_time=7)
+        self.wait(3)
+
+        self.clear()
+
+        DrawBoundingEdges.setup(self)
+        DrawBoundingEdges.construct(self)
+
         self.wait(5)
+        self.clear()
+
+        self.add(heading, definition)
+        idea = Tex(
+            r"\textbf{Idea:} Count left and right bounding edges separately.",
+            tex_environment="flushleft",
+        )
+        idea.to_edge(LEFT)
+        idea.shift(2 * DOWN)
+
+        self.play(Write(idea), run_time=2)

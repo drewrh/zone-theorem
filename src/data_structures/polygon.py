@@ -18,16 +18,14 @@ class Polygon:
     A Polygon is a sequence of points in :math:`\mathbb{R}^2`.
     Edges are the convex closure of subsequent vertices.
     Each edge connects two vertices and each vertex is incident to two edges.
-
-    :Authors:
-        - William Boyles (wmboyles)
     """
 
-    def __init__(self, points: list):
+    def __init__(self, points: list[ndarray]):
         """
         Create a new Polygon from a list of points.
 
-        :param list[numpy.ndarray] list: A list of points defining the polygon.
+        :param list[numpy.ndarray] points: A list of points defining the
+            polygon.
         """
 
         self.points = points
@@ -100,7 +98,7 @@ class Polygon:
         :param Polygon other: Polygon to compare against
         :return: True if this polygon and other are equal to to translation,
             where equal is defined by the
-            :func:`data_structures.polygon.Polygon.__eq__` method.
+            :func:`src.data_structures.polygon.Polygon.__eq__` method.
         :rtype: bool
         """
 

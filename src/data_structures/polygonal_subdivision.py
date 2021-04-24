@@ -1,5 +1,5 @@
 """
-Contains the BoundedPolygonalSubdivisonClass
+Contains the BoundedPolygonalSubdivisonClass.
 
 :Authors:
     - William Boyles (wmboyles)
@@ -17,7 +17,7 @@ from .utils import EPSILON, segment_intersection, orient
 class BoundedPolygonalSubdivision:
     """
     A polygonal subdivision is a collection of linked
-    :class:`data_structures.half_edge.HalfEdge`. It extends the idea of a
+    :class:`src.data_structures.half_edge.HalfEdge`. It extends the idea of a
     linked list into 2D, which adds geometry to the data structure, allowing it
     to represent a connected group of polygons partitioning the plane.
 
@@ -30,9 +30,6 @@ class BoundedPolygonalSubdivision:
     2. The only way to add to the polygonal subdivision is to add a straight
        line through the bounding box. This restriction gurantees that all faces
        within the bounding area are convex.
-
-    :Authors:
-        - William Boyles (wmboyles)
     """
 
     def __init__(self, bottom_left: ndarray, top_right: ndarray):
@@ -77,12 +74,14 @@ class BoundedPolygonalSubdivision:
 
     def get_handle(self, p: ndarray) -> HalfEdge:
         """
-        Return a HalfEdge h such that h.point is p. This is a half edge that
-        comes out of p.
+        Return a :class:`src.data_structures.half_edge.HalfEdge` `h` such that
+        `h.point` is the parameter `p`. This is a half edge that comes out of
+        `p`.
 
-        :param numpy.ndarray p: The point for which to get a HalfEdge.
-        :return: A HalfEdge h such that h.point is p.
-        :rtype: HalfEdge or None
+        :param ndarray p: The point for which to get a HalfEdge.
+        :return: A HalfEdge `h` such
+            that `h.point` is `p`.
+        :rtype: :class:`src.data_structures.half_edge.HalfEdge` or None
         """
 
         try:
@@ -95,7 +94,7 @@ class BoundedPolygonalSubdivision:
         Iterate over the vertices (points) connected by an edge to p in CCW
         order.
 
-        :param numpy.ndarray p: A point in the subdivision
+        :param ndarray p: A point in the subdivision
         :return: An generator over the neighbor points of p
         :rtype: generator
         :raises KeyError: If p is not in the subdivision.
@@ -115,7 +114,8 @@ class BoundedPolygonalSubdivision:
         """
         Add a new vertex p along the edge associated with the halfedge h.
 
-        :param HalfEdge h: The HalfEdge to split
+        :param :class:`src.data_structures.half_edge.HalfEdge` h: The HalfEdge
+            to split
         :param numpy.ndarray p: The point for which to create a new
         :param boundary_split bool: Is this edge being split on the boundary?
             If so, update the boundary polygon.
@@ -164,10 +164,10 @@ class BoundedPolygonalSubdivision:
         """
         Find the correct edge for a to make the edge a--b.
 
-        :param numpy.ndarray a: A point defining one end of the segment to add.
-        :param numpy.ndarray b: A point definite other end of segment to add.
+        :param ndarray a: A point defining one end of the segment to add.
+        :param ndarray b: A point definite other end of segment to add.
         :return: A HalfEdge pointing to a.
-        :rtype: HalfEdge
+        :rtype: :class:`src.data_structures.half_edge.HalfEdge`
         """
 
         """
@@ -212,8 +212,8 @@ class BoundedPolygonalSubdivision:
         It is assumed that this edge can be added as a straight line from a to b.
         That is, a and b are points on the same polygon that has ab as a chord.
 
-        :param numpy.ndarray a: One point of edge to add
-        :param numpy.ndarray b: Other point of edge to add
+        :param ndarray a: One point of edge to add
+        :param ndarray b: Other point of edge to add
         """
 
         alpha, beta = self._add_edge_helper(a, b), self._add_edge_helper(b, a)
@@ -235,8 +235,8 @@ class BoundedPolygonalSubdivision:
         Split any edge that is crossed by the line segment ab at the crossing
         to keep the embedding planar.
 
-        :param numpy.ndarray a: One endpoint of edge to slice in
-        :param numpy.ndarray b: Other endpoint of edge to slice in
+        :param ndarray a: One endpoint of edge to slice in
+        :param ndarray b: Other endpoint of edge to slice in
         """
 
         # Carefully select the halfedge of the face that intersects segment ab.
@@ -276,8 +276,8 @@ class BoundedPolygonalSubdivision:
         that needs to be split to add this point to the subdivision.
 
         :param numpy.ndarray p: Point on outer boundary of subdvision
-        :return: A boundary HalfEdge h such that h.point is p.
-        :rtype: HalfEdge
+        :return: A boundary HalfEdge `h` such that `h.point` is `p`.
+        :rtype: :class:`src.data_structures.half_edge.HalfEdge`
         """
 
         for i in range(len(self.boundary_polygon)):
@@ -295,7 +295,7 @@ class BoundedPolygonalSubdivision:
         """
         Given a line create the line between them in the subdivision.
 
-        :param tuple[numpy.ndarray] line: A tuple of two points on the outer boundary
+        :param tuple[ndarray] line: A tuple of two points on the outer boundary
         """
 
         # Find the halfedges for doing edge subdivision
@@ -318,11 +318,12 @@ class BoundedPolygonalSubdivision:
     def find_zone(self, zone_line: tuple) -> list:
         """
         Takes a line defining a zone and returns a list of
-        :class:`data_structures.polygon.Polygon` that contain the zone line.
+        :class:`src.data_structures.polygon.Polygon` that contain the zone
+        line.
 
-        :param tuple[numpy.ndarray] zone_line: A tuple of two points in the boundary.
-        :return: A list of :class:`data_structures.polygon.Polygon` that
-            contain some portion of the zone_line.
+        :param tuple[ndarray] zone_line: A tuple of two points in the boundary.
+        :return: A list of :class:`src.data_structures.polygon.Polygon` that
+            contain some portion of the `zone_line`.
         :rtype: list[Polygon]
         """
 
@@ -342,7 +343,8 @@ class BoundedPolygonalSubdivision:
 
                 # Recurse on cross point
                 a = cross
-                # Since we're not subdividing edges like in slice_edge, we don't need to do cur.twin.prev
+                # Since we're not subdividing edges like in slice_edge, we
+                # don't need to do cur.twin.prev
                 cur = cur.twin
 
             cur = cur.link
