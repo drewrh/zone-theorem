@@ -224,13 +224,11 @@ class DrawProofInductiveCase(Scene):
             tex_environment="flushleft",
         )
         assumption.shift(2 * UP)
-        equation_list = [
+
+        equation = MathTex(
             r"\bigg\lvert \text{zone}\left(A(L \setminus \{\ell_r\}), \ell\right) \bigg\rvert",
             r"\leq",
             r"3(n-1)",
-        ]
-        equation = Tex(
-            *equation_list,
             tex_environment="equation*",
         )
         equation.next_to(assumption, DOWN)
@@ -240,52 +238,52 @@ class DrawProofInductiveCase(Scene):
         self.wait(2)
         self.clear()
 
-        # # Draw all the lines except the last one
-        # all_lines = random_lines(5)
-        # self.lines = all_lines[:-1]
+        # Draw all the lines except the last one
+        all_lines = random_lines(5)
+        self.lines = all_lines[:-1]
 
-        # # sets self.bps for us
-        # DrawArrangement.setup(self)
-        # DrawArrangement.construct(self)
+        # sets self.bps for us
+        DrawArrangement.setup(self)
+        DrawArrangement.construct(self)
 
-        # # Draw the red zone line
-        # zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
-        # self.play(ShowCreation(Line(*zone_line, color=RED)))
+        # Draw the red zone line
+        zone_line = (point(-MAX_X, 0), point(MAX_X, 0))
+        self.play(ShowCreation(Line(*zone_line, color=RED)))
 
-        # # change the last line to be vertical
-        # # this isn't necessary for the proof, but it makes illustration easier
-        # last_line_x = segment_intersection(*zone_line, *all_lines[-1])[0]
-        # last_line = (point(last_line_x, -MAX_Y), point(last_line_x, MAX_Y))
+        # change the last line to be vertical
+        # this isn't necessary for the proof, but it makes illustration easier
+        last_line_x = segment_intersection(*zone_line, *all_lines[-1])[0]
+        last_line = (point(last_line_x, -MAX_Y), point(last_line_x, MAX_Y))
 
-        # # Keep track of edges of rightmost polygon in the zone
-        # last_polygon = self.bps.find_zone(zone_line)[-1]
-        # before_add_edges = {
-        #     (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
-        #     for i in range(len(last_polygon))
-        # }
+        # Keep track of edges of rightmost polygon in the zone
+        last_polygon = self.bps.find_zone(zone_line)[-1]
+        before_add_edges = {
+            (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
+            for i in range(len(last_polygon))
+        }
 
-        # # Add the rightmost line
-        # self.bps.add_line(last_line)
-        # self.play(ShowCreation(Line(*last_line)))
+        # Add the rightmost line
+        self.bps.add_line(last_line)
+        self.play(ShowCreation(Line(*last_line)))
 
-        # # Keep track of edges of rightmost polygon in the zone
-        # last_polygon = self.bps.find_zone(zone_line)[-1]
-        # after_add_edges = {
-        #     (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
-        #     for i in range(len(last_polygon))
-        # }
+        # Keep track of edges of rightmost polygon in the zone
+        last_polygon = self.bps.find_zone(zone_line)[-1]
+        after_add_edges = {
+            (tuple(last_polygon[i]), tuple(last_polygon[i + 1]))
+            for i in range(len(last_polygon))
+        }
 
-        # # The difference in edges are the added left edges
-        # for line in after_add_edges - before_add_edges:
-        #     # This edge is the 1 added by the line itself
-        #     if round(line[0][0] - line[1][0], 7) == 0:
-        #         self.play(ShowCreation(Line(*line, color=GREEN, stroke_width=10)))
-        #     # These edges are the 2 added by subdividing above and below lines
-        #     else:
-        #         self.play(ShowCreation(Line(*line, color=YELLOW, stroke_width=10)))
+        # The difference in edges are the added left edges
+        for line in after_add_edges - before_add_edges:
+            # This edge is the 1 added by the line itself
+            if round(line[0][0] - line[1][0], 7) == 0:
+                self.play(ShowCreation(Line(*line, color=GREEN, stroke_width=10)))
+            # These edges are the 2 added by subdividing above and below lines
+            else:
+                self.play(ShowCreation(Line(*line, color=YELLOW, stroke_width=10)))
 
-        # self.wait(3)
-        # self.clear()
+        self.wait(3)
+        self.clear()
 
         # Now conclude we added 3 lines
         equation.scale(0.75)
@@ -299,6 +297,7 @@ class DrawProofInductiveCase(Scene):
         list_heading.scale(0.75)
         list_heading.to_edge(LEFT)
         list_heading.shift(UP)
+        # TODO: Is there a way to color text in bulleted lists?
         added_list = BulletedList(
             "$\ell_r$  itself (+1)",
             "Subdivide above, below (+2)",
@@ -312,10 +311,73 @@ class DrawProofInductiveCase(Scene):
 
         self.wait(2)
 
-        # final_equation = Tex(
-        #     r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
-        #     r"\leq",
-        #     equation_list[0],
-        #     r"+1+2",
-        #     tex_environment="equation*",
-        # )
+        # TODO: There has to be a better way to animate algebra than this
+        final_equation1 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"\leq",
+            r"\bigg\lvert \text{zone}\left(A(L \setminus \{\ell_r\}), \ell\right) \bigg\rvert",
+            r"+1",
+            r"+2",
+            tex_environment="equation*",
+        )
+        final_equation2 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"\leq",
+            r"3(n-1)",
+            r"+1",
+            r"+2",
+            tex_environment="equation*",
+        )
+        final_equation3 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"\leq",
+            r"3n-3",
+            r"+1",
+            r"+2",
+            tex_environment="equation*",
+        )
+        final_equation4 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"\leq",
+            r"3n",
+            r"-3",
+            r"+3",
+            tex_environment="equation*",
+        )
+        final_equation5 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"\leq",
+            r"3n",
+            r"",
+            r"",
+            tex_environment="equation*",
+        )
+        final_equation6 = MathTex(
+            r"\bigg\lvert \text{zone}\left(A(L, \ell)\right) \bigg\rvert",
+            r"=",
+            r"O(n)",
+            r"\hspace{1cm}",
+            r"\blacksquare",
+            tex_environment="equation*",
+        )
+        final_equation1.to_edge(DOWN)
+        final_equation2.to_edge(DOWN)
+        final_equation3.to_edge(DOWN)
+        final_equation4.to_edge(DOWN)
+        final_equation5.to_edge(DOWN)
+        final_equation6.to_edge(DOWN)
+
+        self.play(Write(final_equation1[:2]))
+        self.play(ReplacementTransform(equation[0].copy(), final_equation1[2]))
+        self.play(Write(final_equation1[-2:]))
+
+        self.play(ReplacementTransform(final_equation1, final_equation2))
+        self.wait(2)
+        self.play(ReplacementTransform(final_equation2, final_equation3))
+        self.wait(2)
+        self.play(ReplacementTransform(final_equation3, final_equation4))
+        self.wait(2)
+        self.play(ReplacementTransform(final_equation4, final_equation5))
+        self.wait(2)
+        self.play(ReplacementTransform(final_equation5, final_equation6))
+        self.wait(2)
