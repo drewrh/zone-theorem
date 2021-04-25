@@ -18,7 +18,10 @@ from src.animations.draw_statements import (
     DrawZoneTheoremStatement,
 )
 from src.animations.draw_zone import DrawZoneDefintion
-from src.animations.draw_bounding_edges import DrawBoundingEdgesDefinition
+from src.animations.draw_bounding_edges import (
+    DrawBoundingEdgesDefinition,
+    DrawWhatAboutRightEdges,
+)
 
 
 class Main(Scene):
@@ -72,6 +75,12 @@ class Main(Scene):
 
         DrawProofInductiveCase.setup(self)
         DrawProofInductiveCase.construct(self)
+
+        self.wait(3)
+        self.clear()
+
+        DrawWhatAboutRightEdges.setup(self)
+        DrawWhatAboutRightEdges.construct(self)
 
         self.wait(3)
         self.clear()

@@ -28,6 +28,11 @@ class DrawBoundingEdges(Scene):
     It then draws lines above and below the polygon, parallel to the zone line,
     which find the two points on the polygon that separate the elft and right
     sides.
+
+    It requires that a calling or extending class initialize
+    `self.show_rotation` to either `True` or `False`.
+    If true, it will show how left and right bounding edges swap under a 180
+    degree rotation.
     """
 
     @classmethod
@@ -134,6 +139,34 @@ class DrawBoundingEdges(Scene):
 
         self.play(Write(left_label), Write(right_label))
 
+        if not self.show_rotation:
+            return
+
+        # Show how left and right edges swap under rotation
+        to_rotate = VGroup(
+            manim_polygon,
+            left_lines,
+            right_lines,
+            top_line,
+            bottom_line,
+            left_label,
+            right_label,
+            red_line,
+        )
+
+        self.play(Rotating(to_rotate, radians=PI, run_time=2))
+        self.wait(1)
+
+        new_left_label = Text("Left bounding edges", size=0.5, color=BLUE)
+        new_left_label.move_to(right_label)
+        new_right_label = Text("Right bounding edges", size=0.5, color=GREEN)
+        new_right_label.move_to(left_label)
+
+        self.play(
+            ReplacementTransform(right_label, new_left_label),
+            ReplacementTransform(left_label, new_right_label),
+        )
+
 
 class DrawBoundingEdgesDefinition(Scene):
     """
@@ -144,6 +177,7 @@ class DrawBoundingEdgesDefinition(Scene):
 
     def construct(self):
         """:meta private:"""
+        self.show_rotation = False
 
         heading = Text("Counting Edges")
         heading.scale(1.5)
@@ -180,3 +214,34 @@ class DrawBoundingEdgesDefinition(Scene):
         idea.shift(2 * DOWN)
 
         self.play(Write(idea), run_time=2)
+
+
+class DrawWhatAboutRightEdges(Scene):
+    def construct(self):
+        heading = Text("What about Right Edges?")
+        heading.scale(1.5)
+        heading.to_edge(UP)
+        self.add(heading)
+
+        statement = Text("Just Rotate!")
+        self.play(Write(statement), run_time=1.5)
+
+        self.wait(2)
+        self.clear()
+
+        self.show_rotation = True
+        DrawBoundingEdges.setup(self)
+        DrawBoundingEdges.construct(self)
+
+        self.wait(3)
+        self.clear()
+
+        self.add(heading, statement)
+        self.wait(2)
+
+        equation = Tex(
+            r"$O(n)$ left edges $+$ $O(n)$ right edges = $O(n)$ total $\hspace{1cm} \blacksquare$",
+            tex_environment="flushleft",
+        )
+        equation.to_edge(DOWN)
+        self.play(Write(equation), run_time=2)
