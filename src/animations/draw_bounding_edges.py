@@ -170,7 +170,7 @@ class DrawBoundingEdges(Scene):
 
 class DrawBoundingEdgesDefinition(Scene):
     """
-    This animmation gives a definition of what bounding edges are and draws the
+    This animation gives a definition of what bounding edges are and draws the
     left and right bounding edges on a random convex polygon using
     :class:`src.animations.draw_bounding_edges.DrawBoundingEdges`.
     """
@@ -217,7 +217,21 @@ class DrawBoundingEdgesDefinition(Scene):
 
 
 class DrawWhatAboutRightEdges(Scene):
+    """
+    This animation demonstrates why our proof of showing there are :math:`O(n)`
+    left bounding edges also works to show there are :math:`O(n)` right
+    bounding edges.
+    We can simply rotate our view by 180 degrees and see that the right
+    bounding edges of every polygon in the zone become the left bounding edges.
+    So, we could simply go through the steps of our proof again to get
+    :math:`O(n)` right bounding edges for the same arrangment.
+    Since every edge is either left or right bounding and
+    :math:`O(n) + O(n) = O(n)`, we have proved the zone theorem.
+    """
+
     def construct(self):
+        """:meta private:"""
+
         heading = Text("What about Right Edges?")
         heading.scale(1.5)
         heading.to_edge(UP)
