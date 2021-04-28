@@ -1,0 +1,25 @@
+
+name: 'Zone Theorem'
+description: 'Builds documentation for Zone Theorem'
+author: 'Scott Joyner'
+
+inputs:
+  docs-folder:
+    description:
+      Documentation for Zone Theorem
+    required: true
+    default: "docs/"
+  build-command:
+    description:
+      The command used to build Zone Theorem documentation.
+    required: false
+    default: make html
+  pre-build-command:
+    description:
+      Run before the build command, you can use this to install system level
+      dependencies, for example with
+      "apt-get update -y && apt-get install -y perl"
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
