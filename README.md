@@ -45,6 +45,14 @@ make html
 
 This will generate several html files in `[PROJECT ROOT]/docs/_build/html`. `index.html` is the home page of the documentation.
 
+### Run Tests
+
+To run the tests run the following command from the project root directory
+
+```bash
+python tests
+```
+
 ## Group Members
 
 -   Drew Hughlett
