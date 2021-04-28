@@ -4,11 +4,11 @@
 
 An arrangement of lines is the polygonal subdivision induced by those lines in the plane.
 
-<img style="max-height: 250px" src="README_images/arrangement.png" />
+<img style="max-height: 250px" src="README_media/arrangement.png" />
 
 The zone of a line is all polygons in an arrangement of lines that a line crosses.
 
-<img style="max-height: 250px" src="README_images/zone.png" />
+<img style="max-height: 250px" src="README_media/zone.png" />
 
 The Zone theorem states that assuming general position for the lines (no 2 lines parallel, no 3 lines intersecting at a point), the number of edges in the zone of any line is O(n), where n is the number of lines in the arrangment.
 This result has implies that one can incrementally build a polygonal subdivision data structure for an arrangment in O(n<sup>2</sup>) time.
