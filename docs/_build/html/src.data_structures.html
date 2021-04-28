@@ -1,0 +1,609 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.data_structures package &mdash; Zone Theorem  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="src.animations package" href="src.animations.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Zone Theorem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.animations.html">src.animations package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">src.data_structures package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Zone Theorem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+          <li><a href="src.html">src package</a> &raquo;</li>
+        
+      <li>src.data_structures package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.data_structures.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="src-data-structures-package">
+<h1>src.data_structures package<a class="headerlink" href="#src-data-structures-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.data_structures.half_edge">
+<span id="src-data-structures-half-edge-module"></span><h2>src.data_structures.half_edge module<a class="headerlink" href="#module-src.data_structures.half_edge" title="Permalink to this headline">¶</a></h2>
+<p>Contains HalfEdge class, which is generally used in polygonal subdivision data
+structures like
+<a class="reference internal" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision" title="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="src.data_structures.half_edge.HalfEdge">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">src.data_structures.half_edge.</span></code><code class="sig-name descname"><span class="pre">HalfEdge</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data_structures/half_edge.html#HalfEdge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A HalfEdge is the most basic building block of a polygonal subdivision.
+HalfEdges connect two points that are joined by an edge.</p>
+<p>Since a single edge separates two faces, we split each edge in half so that
+we can associate a HalfEdge with a single face.</p>
+<p>The HalfEdge stores the point from which they originiate.</p>
+<p>HalfEdges are cyclically linked so that if we keep calling link or twin, we
+will get back to our starting HalfEdge after visiting all other HalfEdges
+in the same face.</p>
+<p>Each HalfEdge’s other half is called it’s twin.
+Going from a HalfEdge to its twin will change the current face in the
+polygonal subidvision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="src.data_structures.half_edge.HalfEdge.get_polygon">
+<code class="sig-name descname"><span class="pre">get_polygon</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><span class="pre">src.data_structures.polygon.Polygon</span></a><a class="reference internal" href="_modules/src/data_structures/half_edge.html#HalfEdge.get_polygon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge.get_polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Polygon of this HalfEdge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The polygon of which this HalfEdge defines one edge.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.polygon.Polygon</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="src.data_structures.half_edge.HalfEdge.link">
+<code class="sig-name descname"><span class="pre">link</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Next HalfEdge in same Polygon as thisHalfEdge</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="src.data_structures.half_edge.HalfEdge.point">
+<code class="sig-name descname"><span class="pre">point</span></code><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Point in subdivision from which this HalfEdge originates</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="src.data_structures.half_edge.HalfEdge.prev">
+<code class="sig-name descname"><span class="pre">prev</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge.prev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Previous Halfedge in same Polygon as this HalfEdge</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="src.data_structures.half_edge.HalfEdge.twin">
+<code class="sig-name descname"><span class="pre">twin</span></code><em class="property"><span class="pre">:</span> <a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#src.data_structures.half_edge.HalfEdge.twin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Other HalfEdge defining the same edge as this HalfEdge</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.data_structures.point">
+<span id="src-data-structures-point-module"></span><h2>src.data_structures.point module<a class="headerlink" href="#module-src.data_structures.point" title="Permalink to this headline">¶</a></h2>
+<p>A point is a point in <span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>, where <span class="math notranslate nohighlight">\(d\)</span> is the dimension of
+the space in which the point lives. Generally, we’ll work with points in
+<span class="math notranslate nohighlight">\(\mathbb{R}^2\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="src.data_structures.point.point">
+<code class="sig-prename descclassname"><span class="pre">src.data_structures.point.</span></code><code class="sig-name descname"><span class="pre">point</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="_modules/src/data_structures/point.html#point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.point.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new point in any number of dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<em>float</em>) – Coordinates of point</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Final “z” coordinate of point. Defaults to 1 to make things
+like <a class="reference internal" href="#src.data_structures.utils.orient" title="src.data_structures.utils.orient"><code class="xref py py-func docutils literal notranslate"><span class="pre">src.data_structures.utils.orient()</span></code></a> easier, but can be 0 to
+simulate points infinitely far away in the direction of coords as a
+vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A numpy array of point like (coords, z).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.data_structures.polygon">
+<span id="src-data-structures-polygon-module"></span><h2>src.data_structures.polygon module<a class="headerlink" href="#module-src.data_structures.polygon" title="Permalink to this headline">¶</a></h2>
+<p>Contains the Polyogn class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="src.data_structures.polygon.Polygon">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">src.data_structures.polygon.</span></code><code class="sig-name descname"><span class="pre">Polygon</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data_structures/polygon.html#Polygon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygon.Polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A Polygon is a sequence of points in <span class="math notranslate nohighlight">\(\mathbb{R}^2\)</span>.
+Edges are the convex closure of subsequent vertices.
+Each edge connects two vertices and each vertex is incident to two edges.</p>
+<dl class="py method">
+<dt id="src.data_structures.polygon.Polygon.equal_up_to_translation">
+<code class="sig-name descname"><span class="pre">equal_up_to_translation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><span class="pre">src.data_structures.polygon.Polygon</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/src/data_structures/polygon.html#Polygon.equal_up_to_translation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygon.Polygon.equal_up_to_translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>A polygon <span class="math notranslate nohighlight">\(A\)</span> is equal to a polygon <span class="math notranslate nohighlight">\(B\)</span> up to translation
+iff there is some translation <span class="math notranslate nohighlight">\(d\)</span> such that <span class="math notranslate nohighlight">\(A = B + d\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><em>Polygon</em></a>) – Polygon to compare against</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if this polygon and other are equal to to translation,
+where equal is defined by the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">src.data_structures.polygon.Polygon.__eq__()</span></code> method.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.data_structures.polygon.Polygon.is_convex">
+<code class="sig-name descname"><span class="pre">is_convex</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/src/data_structures/polygon.html#Polygon.is_convex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygon.Polygon.is_convex" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple polygon is convex iff any line with both endpoints in or on
+the polygon is completely contained in the polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if this polygon is convex, else False</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.data_structures.polygon.Polygon.is_simple">
+<code class="sig-name descname"><span class="pre">is_simple</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/src/data_structures/polygon.html#Polygon.is_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygon.Polygon.is_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>A polygon is simple if none of its edges cross each other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True iff this polygon is simple, else False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.data_structures.polygonal_subdivision">
+<span id="src-data-structures-polygonal-subdivision-module"></span><h2>src.data_structures.polygonal_subdivision module<a class="headerlink" href="#module-src.data_structures.polygonal_subdivision" title="Permalink to this headline">¶</a></h2>
+<p>Contains the BoundedPolygonalSubdivisonClass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">src.data_structures.polygonal_subdivision.</span></code><code class="sig-name descname"><span class="pre">BoundedPolygonalSubdivision</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bottom_left</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_right</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data_structures/polygonal_subdivision.html#BoundedPolygonalSubdivision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A polygonal subdivision is a collection of linked
+<a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.half_edge.HalfEdge</span></code></a>. It extends the idea of a
+linked list into 2D, which adds geometry to the data structure, allowing it
+to represent a connected group of polygons partitioning the plane.</p>
+<p>A BoundedPolygonalSubdivision is a little more restrictive than a general
+polygonal subdivision.</p>
+<ol class="arabic simple">
+<li><p>As the name suggests, the polygonal subdivision is bounded within a box,
+meaning we don’t partition the entire plane like in a polygonal
+subdivision.</p></li>
+<li><p>The only way to add to the polygonal subdivision is to add a straight
+line through the bounding box. This restriction gurantees that all faces
+within the bounding area are convex.</p></li>
+</ol>
+<dl class="py method">
+<dt id="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.add_line">
+<code class="sig-name descname"><span class="pre">add_line</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data_structures/polygonal_subdivision.html#BoundedPolygonalSubdivision.add_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.add_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a line create the line between them in the subdivision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>tuple</em><em>[</em><em>ndarray</em><em>]</em>) – A tuple of two points on the outer boundary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.find_zone">
+<code class="sig-name descname"><span class="pre">find_zone</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zone_line</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="reference internal" href="_modules/src/data_structures/polygonal_subdivision.html#BoundedPolygonalSubdivision.find_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.find_zone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a line defining a zone and returns a list of
+<a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.polygon.Polygon</span></code></a> that contain the zone
+line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>zone_line</strong> (<em>tuple</em><em>[</em><em>ndarray</em><em>]</em>) – A tuple of two points in the boundary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of <a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.polygon.Polygon</span></code></a> that
+contain some portion of the <cite>zone_line</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#src.data_structures.polygon.Polygon" title="src.data_structures.polygon.Polygon">Polygon</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.get_handle">
+<code class="sig-name descname"><span class="pre">get_handle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><span class="pre">src.data_structures.half_edge.HalfEdge</span></a><a class="reference internal" href="_modules/src/data_structures/polygonal_subdivision.html#BoundedPolygonalSubdivision.get_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.get_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.half_edge.HalfEdge</span></code></a> <cite>h</cite> such that
+<cite>h.point</cite> is the parameter <cite>p</cite>. This is a half edge that comes out of
+<cite>p</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>ndarray</em>) – The point for which to get a HalfEdge.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A HalfEdge <cite>h</cite> such
+that <cite>h.point</cite> is <cite>p</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.data_structures.half_edge.HalfEdge" title="src.data_structures.half_edge.HalfEdge"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.data_structures.half_edge.HalfEdge</span></code></a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.nbrs">
+<code class="sig-name descname"><span class="pre">nbrs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data_structures/polygonal_subdivision.html#BoundedPolygonalSubdivision.nbrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.nbrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the vertices (points) connected by an edge to p in CCW
+order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>ndarray</em>) – A point in the subdivision</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An generator over the neighbor points of p</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>generator</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If p is not in the subdivision.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.data_structures.utils">
+<span id="src-data-structures-utils-module"></span><h2>src.data_structures.utils module<a class="headerlink" href="#module-src.data_structures.utils" title="Permalink to this headline">¶</a></h2>
+<p>This module contains several methods that don’t nicely fit into a single data
+structure. The might be used accross several data structures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>William Boyles (wmboyles)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="src.data_structures.utils.lex_compare">
+<code class="sig-prename descclassname"><span class="pre">src.data_structures.utils.</span></code><code class="sig-name descname"><span class="pre">lex_compare</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="reference internal" href="_modules/src/data_structures/utils.html#lex_compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.utils.lex_compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare two points lexiographically. (0,0) &lt; (0,1) &lt; (1,0) &lt; (1,1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>ndarray</em>) – First point to compare</p></li>
+<li><p><strong>p2</strong> (<em>ndarray</em>) – Second point to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>-1 if p1 &lt; p2, 0 if p1 == p2, and 1 if p1 &gt; p2 lexiographically</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.data_structures.utils.orient">
+<code class="sig-prename descclassname"><span class="pre">src.data_structures.utils.</span></code><code class="sig-name descname"><span class="pre">orient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="reference internal" href="_modules/src/data_structures/utils.html#orient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.utils.orient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the final point is above (-1), below (1), or coplaner with the
+previous <span class="math notranslate nohighlight">\(n\)</span> points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>points</strong> (<em>ndarray</em>) – <span class="math notranslate nohighlight">\(n+1\)</span> points in <span class="math notranslate nohighlight">\(\mathbb{R}^{n}\)</span></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>-1, 0, or 1 depending on orientation of points.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.data_structures.utils.segment_intersection">
+<code class="sig-prename descclassname"><span class="pre">src.data_structures.utils.</span></code><code class="sig-name descname"><span class="pre">segment_intersection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="_modules/src/data_structures/utils.html#segment_intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.utils.segment_intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given four points a,b,c,d defining two line segments a–b and c–d,
+determine at what point they cross.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>ndarray</em>) – One endpoint of segment a–b</p></li>
+<li><p><strong>b</strong> (<em>ndarray</em>) – Other endpoint of segment a–b</p></li>
+<li><p><strong>c</strong> (<em>ndarray</em>) – One endpoint of segment c–d</p></li>
+<li><p><strong>d</strong> (<em>ndarray</em>) – Other endpoint of segment c–d</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The point at which segment a–b intersects c–d</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="src.data_structures.utils.segments_cross">
+<code class="sig-prename descclassname"><span class="pre">src.data_structures.utils.</span></code><code class="sig-name descname"><span class="pre">segments_cross</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/src/data_structures/utils.html#segments_cross"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data_structures.utils.segments_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if segment a–b intersects segment c–d in a non-overlapping way.
+If all 4 points are colinear, that is considered overlapping.
+However, if the lines form a “T” shape, that is not overlapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>ndarray</em>) – One endpoint of segment a–b</p></li>
+<li><p><strong>b</strong> (<em>ndarray</em>) – Other endpoint of segment a–b</p></li>
+<li><p><strong>c</strong> (<em>ndarray</em>) – One endpoint of segment c–d</p></li>
+<li><p><strong>d</strong> (<em>ndarray</em>) – Other endpoint of segment c–d</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True iff the segments are not colinear and intersect, else False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.data_structures">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.data_structures" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="src.animations.html" class="btn btn-neutral float-left" title="src.animations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, William Boyles.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
