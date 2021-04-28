@@ -1,0 +1,549 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.data_structures.polygonal_subdivision &mdash; Zone Theorem  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Zone Theorem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zone Theorem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>src.data_structures.polygonal_subdivision</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for src.data_structures.polygonal_subdivision</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Contains the BoundedPolygonalSubdivisonClass.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd">    - William Boyles (wmboyles)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="kn">from</span> <span class="nn">.point</span> <span class="kn">import</span> <span class="n">point</span>
+<span class="kn">from</span> <span class="nn">.polygon</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">from</span> <span class="nn">.half_edge</span> <span class="kn">import</span> <span class="n">HalfEdge</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">EPSILON</span><span class="p">,</span> <span class="n">segment_intersection</span><span class="p">,</span> <span class="n">orient</span>
+
+
+<div class="viewcode-block" id="BoundedPolygonalSubdivision"><a class="viewcode-back" href="../../../src.data_structures.html#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision">[docs]</a><span class="k">class</span> <span class="nc">BoundedPolygonalSubdivision</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A polygonal subdivision is a collection of linked</span>
+<span class="sd">    :class:`src.data_structures.half_edge.HalfEdge`. It extends the idea of a</span>
+<span class="sd">    linked list into 2D, which adds geometry to the data structure, allowing it</span>
+<span class="sd">    to represent a connected group of polygons partitioning the plane.</span>
+
+<span class="sd">    A BoundedPolygonalSubdivision is a little more restrictive than a general</span>
+<span class="sd">    polygonal subdivision.</span>
+
+<span class="sd">    1. As the name suggests, the polygonal subdivision is bounded within a box,</span>
+<span class="sd">       meaning we don&#39;t partition the entire plane like in a polygonal</span>
+<span class="sd">       subdivision.</span>
+<span class="sd">    2. The only way to add to the polygonal subdivision is to add a straight</span>
+<span class="sd">       line through the bounding box. This restriction gurantees that all faces</span>
+<span class="sd">       within the bounding area are convex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom_left</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">top_right</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given the bottom-left and top-right points defining the bounding box,</span>
+<span class="sd">        initialize the bounded polygonal subdivision.</span>
+
+<span class="sd">        :param ndarray bottom_left: bottom left point of bounding box</span>
+<span class="sd">        :param ndarray top_right: top right point of bounding box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">top_left</span> <span class="o">=</span> <span class="n">point</span><span class="p">(</span><span class="n">bottom_left</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_right</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">bottom_right</span> <span class="o">=</span> <span class="n">point</span><span class="p">(</span><span class="n">top_right</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bottom_left</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># # points that are on the bounding box of the polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">bottom_left</span><span class="p">,</span> <span class="n">bottom_right</span><span class="p">,</span> <span class="n">top_right</span><span class="p">,</span> <span class="n">top_left</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># # key: point, value: half-edge coming out of point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># create half edges of points around outside</span>
+        <span class="n">outside_edges</span><span class="p">,</span> <span class="n">inside_edges</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">polygon_point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">:</span>
+            <span class="n">outside_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">polygon_point</span><span class="p">))</span>
+            <span class="n">inside_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">polygon_point</span><span class="p">))</span>
+
+        <span class="c1"># link them all up and fill dictionary</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">outside_edges</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">outside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">outside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+            <span class="n">inside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">inside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+
+            <span class="n">outside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">outside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+            <span class="n">inside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">inside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+
+            <span class="n">outside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">twin</span> <span class="o">=</span> <span class="n">inside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+            <span class="n">inside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">twin</span> <span class="o">=</span> <span class="n">outside_edges</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">outside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="p">)]</span> <span class="o">=</span> <span class="n">outside_edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<div class="viewcode-block" id="BoundedPolygonalSubdivision.get_handle"><a class="viewcode-back" href="../../../src.data_structures.html#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.get_handle">[docs]</a>    <span class="k">def</span> <span class="nf">get_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HalfEdge</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a :class:`src.data_structures.half_edge.HalfEdge` `h` such that</span>
+<span class="sd">        `h.point` is the parameter `p`. This is a half edge that comes out of</span>
+<span class="sd">        `p`.</span>
+
+<span class="sd">        :param ndarray p: The point for which to get a HalfEdge.</span>
+<span class="sd">        :return: A HalfEdge `h` such</span>
+<span class="sd">            that `h.point` is `p`.</span>
+<span class="sd">        :rtype: :class:`src.data_structures.half_edge.HalfEdge` or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="BoundedPolygonalSubdivision.nbrs"><a class="viewcode-back" href="../../../src.data_structures.html#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.nbrs">[docs]</a>    <span class="k">def</span> <span class="nf">nbrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over the vertices (points) connected by an edge to p in CCW</span>
+<span class="sd">        order.</span>
+
+<span class="sd">        :param ndarray p: A point in the subdivision</span>
+<span class="sd">        :return: An generator over the neighbor points of p</span>
+<span class="sd">        :rtype: generator</span>
+<span class="sd">        :raises KeyError: If p is not in the subdivision.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">start_edge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">start_edge</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">point</span>
+
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">start_edge</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">link</span>
+        <span class="k">while</span> <span class="n">cur</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">start_edge</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">point</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">link</span>
+
+        <span class="ne">StopIteration</span></div>
+
+    <span class="k">def</span> <span class="nf">_split_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="n">HalfEdge</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">boundary_split</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new vertex p along the edge associated with the halfedge h.</span>
+
+<span class="sd">        :param :class:`src.data_structures.half_edge.HalfEdge` h: The HalfEdge</span>
+<span class="sd">            to split</span>
+<span class="sd">        :param numpy.ndarray p: The point for which to create a new</span>
+<span class="sd">        :param boundary_split bool: Is this edge being split on the boundary?</span>
+<span class="sd">            If so, update the boundary polygon.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Store k as h.twin</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">twin</span>
+
+        <span class="c1"># Create new half edges that comes out of p</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">p</span><span class="p">),</span> <span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span> <span class="o">=</span> <span class="n">y</span>
+
+        <span class="c1"># First, we set all the attributes of x and y</span>
+        <span class="c1"># x&#39;s twin is h, y&#39;s twin is k</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">twin</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">twin</span> <span class="o">=</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span>
+
+        <span class="c1"># x&#39;s link is k.link, y&#39;s link is h.link</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">link</span>
+
+        <span class="c1"># x&#39;s prev is k, y&#39;s prev is h</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span>
+
+        <span class="c1"># Second, we set all the attributes of half edges other than h and k</span>
+        <span class="c1"># h.link&#39;s prev is y, k.link&#39;s prev is x</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">link</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>
+
+        <span class="c1"># Finally, we update attributes of h and h.twin</span>
+        <span class="c1"># h&#39;s twin is x, k&#39;s twin is y</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">twin</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">twin</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="c1"># h&#39;s link is y, k&#39;s link is x</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>
+
+        <span class="c1"># If we&#39;re splitting a boundary edge, we need to update the boundary polygon</span>
+        <span class="k">if</span> <span class="n">boundary_split</span><span class="p">:</span>
+            <span class="c1"># TODO: Could speed this up with a binary search?</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">point</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># inserts at the index before</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_edge_helper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HalfEdge</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the correct edge for a to make the edge a--b.</span>
+
+<span class="sd">        :param ndarray a: A point defining one end of the segment to add.</span>
+<span class="sd">        :param ndarray b: A point definite other end of segment to add.</span>
+<span class="sd">        :return: A HalfEdge pointing to a.</span>
+<span class="sd">        :rtype: :class:`src.data_structures.half_edge.HalfEdge`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        WLOG, let&#39;s say we&#39;re finding the correct HalfEdge for a and a is left</span>
+<span class="sd">        of b.</span>
+
+<span class="sd">        There are 2 cases:</span>
+<span class="sd">        1) There exists a point above the line a--b</span>
+<span class="sd">          * Find the rightmost point above the line a--b.</span>
+<span class="sd">        2) There are no points above the line a--b</span>
+<span class="sd">          * Find the rightmost point below the line a--b</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">max_right</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># rightmost point below the line a--b</span>
+        <span class="n">have_above</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># are there any points above the line a--b?</span>
+
+        <span class="k">for</span> <span class="n">neighbor_vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbrs</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="c1"># iterates in ccw order</span>
+
+            <span class="c1"># if there&#39;s a point above a--b</span>
+            <span class="k">if</span> <span class="n">orient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">neighbor_vertex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+                <span class="c1"># if all points before were below the line, we found our point</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">have_above</span><span class="p">:</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">neighbor_vertex</span><span class="p">)</span>
+
+                    <span class="c1"># Need to make sure half edge actually points to a</span>
+                    <span class="k">while</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">point</span> <span class="o">==</span> <span class="n">a</span><span class="p">):</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">link</span>
+
+                    <span class="k">return</span> <span class="n">h</span>
+
+                <span class="n">have_above</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">elif</span> <span class="n">max_right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">orient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">max_right</span><span class="p">,</span> <span class="n">neighbor_vertex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">max_right</span> <span class="o">=</span> <span class="n">neighbor_vertex</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">max_right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an edge connection vertex a to vertex b.</span>
+<span class="sd">        It is assumed that this edge can be added as a straight line from a to b.</span>
+<span class="sd">        That is, a and b are points on the same polygon that has ab as a chord.</span>
+
+<span class="sd">        :param ndarray a: One point of edge to add</span>
+<span class="sd">        :param ndarray b: Other point of edge to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge_helper</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge_helper</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="c1"># connect edges, which creates two new HalfEdges</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">a</span><span class="p">),</span> <span class="n">HalfEdge</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">twin</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">twin</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">twin</span><span class="p">,</span> <span class="n">alpha</span><span class="o">.</span><span class="n">twin</span>
+
+        <span class="n">x</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">beta</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span>
+
+        <span class="n">alpha</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">beta</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="n">beta</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">alpha</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">_slice_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a straight path of edges from a to b</span>
+<span class="sd">        Split any edge that is crossed by the line segment ab at the crossing</span>
+<span class="sd">        to keep the embedding planar.</span>
+
+<span class="sd">        :param ndarray a: One endpoint of edge to slice in</span>
+<span class="sd">        :param ndarray b: Other endpoint of edge to slice in</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Carefully select the halfedge of the face that intersects segment ab.</span>
+        <span class="c1"># Since we&#39;re always connecting from the boundary points that have</span>
+        <span class="c1"># degree 2, we can choose the edge we want easily.</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">twin</span>
+
+        <span class="c1"># Walk around face until one segment crosses a--b</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">cross</span> <span class="o">=</span> <span class="n">segment_intersection</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">cur</span><span class="o">.</span><span class="n">point</span><span class="p">,</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+
+            <span class="c1"># If there&#39;s an intersection that&#39;s not where we started</span>
+            <span class="k">if</span> <span class="n">cross</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">cross</span> <span class="o">==</span> <span class="n">a</span><span class="p">):</span>
+                <span class="c1"># If we hit the final point, we&#39;re done</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">cross</span> <span class="o">==</span> <span class="n">b</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+                    <span class="k">return</span>
+
+                <span class="c1"># If a--b crosses a vertex, recurse on that vertex</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">cross</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">cross</span><span class="p">)</span>
+                <span class="c1"># Otherwise, create a new vertex, draw the edge, and recurse</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_split_edge</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">cross</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">cross</span><span class="p">)</span>
+
+                <span class="c1"># flip to new face, have new &quot;start&quot; point</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">prev</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">cross</span>
+
+            <span class="c1"># move to the next edge</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">link</span>
+
+    <span class="k">def</span> <span class="nf">_find_boundary_half_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HalfEdge</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a point on the boundary, find the half edge on the boundary</span>
+<span class="sd">        that needs to be split to add this point to the subdivision.</span>
+
+<span class="sd">        :param numpy.ndarray p: Point on outer boundary of subdvision</span>
+<span class="sd">        :return: A boundary HalfEdge `h` such that `h.point` is `p`.</span>
+<span class="sd">        :rtype: :class:`src.data_structures.half_edge.HalfEdge`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">orient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="n">l</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">n1</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">n2</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+                <span class="c1"># if we&#39;re between two points, we&#39;re at the right place</span>
+                <span class="k">if</span> <span class="n">n1</span> <span class="o">&lt;=</span> <span class="n">l</span> <span class="ow">and</span> <span class="n">n2</span> <span class="o">&lt;=</span> <span class="n">l</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_polygon</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BoundedPolygonalSubdivision.add_line"><a class="viewcode-back" href="../../../src.data_structures.html#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.add_line">[docs]</a>    <span class="k">def</span> <span class="nf">add_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a line create the line between them in the subdivision.</span>
+
+<span class="sd">        :param tuple[ndarray] line: A tuple of two points on the outer boundary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Find the halfedges for doing edge subdivision</span>
+        <span class="n">h1</span><span class="p">,</span> <span class="n">h2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">h1</span><span class="p">:</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_boundary_half_edge</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">h2</span><span class="p">:</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_boundary_half_edge</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">h1</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">h2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+
+        <span class="c1"># Do the subdivisions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_split_edge</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundary_split</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_split_edge</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundary_split</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># add in the line</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slice_edge</span><span class="p">(</span><span class="o">*</span><span class="n">line</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BoundedPolygonalSubdivision.find_zone"><a class="viewcode-back" href="../../../src.data_structures.html#src.data_structures.polygonal_subdivision.BoundedPolygonalSubdivision.find_zone">[docs]</a>    <span class="k">def</span> <span class="nf">find_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone_line</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a line defining a zone and returns a list of</span>
+<span class="sd">        :class:`src.data_structures.polygon.Polygon` that contain the zone</span>
+<span class="sd">        line.</span>
+
+<span class="sd">        :param tuple[ndarray] zone_line: A tuple of two points in the boundary.</span>
+<span class="sd">        :return: A list of :class:`src.data_structures.polygon.Polygon` that</span>
+<span class="sd">            contain some portion of the `zone_line`.</span>
+<span class="sd">        :rtype: list[Polygon]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">zone_line</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_boundary_half_edge</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">twin</span>
+
+        <span class="n">zone</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">cross</span> <span class="o">=</span> <span class="n">segment_intersection</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">cur</span><span class="o">.</span><span class="n">point</span><span class="p">,</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">cross</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">EPSILON</span><span class="p">:</span>
+                <span class="n">zone</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">get_polygon</span><span class="p">())</span>
+
+                <span class="c1"># If we hit the final point, we&#39;re done</span>
+                <span class="k">if</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">EPSILON</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">zone</span>
+
+                <span class="c1"># Recurse on cross point</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">cross</span>
+                <span class="c1"># Since we&#39;re not subdividing edges like in slice_edge, we</span>
+                <span class="c1"># don&#39;t need to do cur.twin.prev</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">twin</span>
+
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">link</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, William Boyles.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
