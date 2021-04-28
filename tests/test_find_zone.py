@@ -7,9 +7,6 @@ Test class for finding the zone of a
 """
 
 
-import sys
-sys.path.append('src/') # Python packages are weird
-
 from data_structures.polygonal_subdivision import BoundedPolygonalSubdivision as BPS
 from data_structures.point import point
 

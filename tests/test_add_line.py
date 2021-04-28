@@ -7,9 +7,6 @@ Test class for adding a line to a
 """
 
 
-import sys
-sys.path.append('src/') # Python packages are weird
-
 from data_structures.polygonal_subdivision import BoundedPolygonalSubdivision as BPS
 from data_structures.point import point
 from numpy import any, all, array, around
