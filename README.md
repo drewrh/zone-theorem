@@ -35,6 +35,8 @@ python -m manim prove.py
 This will create a video in `[PROJECT ROOT]/media/vidoes/prove/1080p60/Main.mp4`.
 You can use flags described in the manim documentation like `-p` or `-ql` to automatically play the video when done rendering or adjust the video quality.
 
+If you'd prefer to just see a high-quality output without running anything, you can watch this [YouTube Video](https://www.youtube.com/watch?v=Rzj6Pg2G-zs).
+
 ### Build Documentation
 
 To generate the documentation run the following command from the `docs` folder
